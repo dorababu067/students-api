@@ -20,11 +20,14 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from student.views import UserEndpoint, UserDetailEndpoint
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", TemplateView.as_view(template_name="index.html")),
     path("api/", include("student.urls")),
+    path("api/users/", UserEndpoint.as_view(), name="user-endpoint"),
+    path("api/users/me/", UserDetailEndpoint.as_view(), name="user-details"),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
