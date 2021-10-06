@@ -29,9 +29,9 @@ class SchoolViewset(viewsets.ModelViewSet):
 class TeacherEndpoint(APIView):
     def get_teacher(self, teacher_id):
         try:
-            school = Teacher.objects.get(id=teacher_id)
-            return school
-        except School.DoesNotExist:
+            teacher = Teacher.objects.get(id=teacher_id)
+            return teacher
+        except Teacher.DoesNotExist:
             raise serializers.ValidationError(
                 {"error": "please provide valid teacher id"}
             )
