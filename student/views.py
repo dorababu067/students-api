@@ -42,7 +42,7 @@ class SchoolTeacherEndpoint(SchoolObjectMixin, APIView):
 
     def get(self, request, pk):
         school = self.get_school(pk)
-        queryset = Teacher.objects.filter(school_id=school.id)
+        queryset = Teacher.objects.filter(school__id=school.id)
         serializer = TeacherSerializer(queryset, many=True)
         return Response(serializer.data)
 
