@@ -49,7 +49,7 @@ class SchoolTeacherEndpoint(SchoolObjectMixin, APIView):
     def post(self, request, pk):
         school = self.get_school(pk)
         request.data["school"] = school.id
-        serializer = TeacherSerializer(data=request.data, partial=True)
+        serializer = TeacherSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             return Response(serializer.data)
 
@@ -97,7 +97,7 @@ class SchoolStudentEndpoint(SchoolObjectMixin, APIView):
     def post(self, request, pk):
         school = self.get_school(pk)
         request.data["school"] = school.id
-        serializer = StudentSerializer(data=request.data, partial=True)
+        serializer = StudentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             # new student
             serializer.save()
