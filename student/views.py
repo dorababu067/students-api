@@ -51,6 +51,8 @@ class SchoolTeacherEndpoint(SchoolObjectMixin, APIView):
         request.data["school"] = school.id
         serializer = TeacherSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
+            # new teacher
+            serializer.save()
             return Response(serializer.data)
 
 
