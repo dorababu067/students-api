@@ -26,34 +26,6 @@ class SchoolViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
 
-class TeacherEndpoint(APIView):
-    def get_teacher(self, teacher_id):
-        try:
-            teacher = Teacher.objects.get(id=teacher_id)
-            return teacher
-        except Teacher.DoesNotExist:
-            raise serializers.ValidationError(
-                {"error": "please provide valid teacher id"}
-            )
-
-    def get(self, request, pk):
-        teacher = self.get_teacher(pk)
-        serializer = TeacherDetailSerializer(teacher)
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        teacher = self.get_teacher(pk)
-        serializer = TeacherSerializer(teacher, data=request.data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
-
-    def delete(self, request, pk):
-        teacher = self.get_teacher(pk)
-        teacher.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
 class SchoolObjectMixin(object):
     def get_school(self, school_id):
         try:
@@ -82,6 +54,37 @@ class SchoolTeacherEndpoint(SchoolObjectMixin, APIView):
             return Response(serializer.data)
 
 
+class ShoolTeacherDetailEndpoint(SchoolObjectMixin, APIView):
+    def get_teacher(self, school, teacher_id):
+        try:
+            teacher = school.teachers.get(id=teacher_id)
+            return teacher
+        except Teacher.DoesNotExist:
+            raise serializers.ValidationError(
+                {"error": "please provide valid teacher id"}
+            )
+
+    def get(self, request, school_id, teacher_id):
+        school = self.get_school(school_id)
+        teacher = self.get_teacher(school, teacher_id)
+        serializer = TeacherDetailSerializer(teacher)
+        return Response(serializer.data)
+
+    def put(self, request, school_id, teacher_id):
+        school = self.get_school(school_id)
+        teacher = self.get_teacher(school, teacher_id)
+        serializer = TeacherSerializer(teacher, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+
+    def delete(self, request, school_id, teacher_id):
+        school = self.get_school(school_id)
+        teacher = self.get_teacher(school, teacher_id)
+        teacher.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class SchoolStudentEndpoint(SchoolObjectMixin, APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -101,30 +104,33 @@ class SchoolStudentEndpoint(SchoolObjectMixin, APIView):
             return Response(serializer.data)
 
 
-class StudentEndpoint(APIView):
-    def get_student(self, student_id):
+class SchoolStudentDetailEndpoint(SchoolObjectMixin, APIView):
+    def get_student(self, school, student_id):
         try:
-            student = Student.objects.get(id=student_id)
+            student = school.students.get(id=student_id)
             return student
         except Student.DoesNotExist:
             raise serializers.ValidationError(
                 {"error": "please provide valid student id"}
             )
 
-    def get(self, request, pk):
-        student = self.get_student(pk)
+    def get(self, request, school_id, student_id):
+        school = self.get_school(school_id)
+        student = self.get_student(school, student_id)
         serializer = StudentDetailSerializer(student)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        student = self.get_student(pk)
+    def put(self, request, school_id, student_id):
+        school = self.get_school(school_id)
+        student = self.get_student(school, student_id)
         serializer = StudentSerializer(student, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
 
-    def delete(self, request, pk):
-        student = self.get_student(pk)
+    def delete(self, request, school_id, student_id):
+        school = self.get_school(school_id)
+        student = self.get_student(school, student_id)
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

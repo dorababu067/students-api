@@ -3,10 +3,10 @@ from rest_framework import routers
 
 from .views import (
     SchoolViewset,
-    TeacherEndpoint,
-    StudentEndpoint,
     SchoolTeacherEndpoint,
+    ShoolTeacherDetailEndpoint,
     SchoolStudentEndpoint,
+    SchoolStudentDetailEndpoint,
 )
 
 
@@ -26,10 +26,16 @@ urlpatterns = [
     ),
     #
     # teachers related endpoints
-    path("teachers/<int:pk>/", TeacherEndpoint.as_view()),
     path("schools/<int:pk>/teachers/", SchoolTeacherEndpoint.as_view()),
+    path(
+        "schools/<int:school_id>/teachers/<int:teacher_id>/",
+        ShoolTeacherDetailEndpoint.as_view(),
+    ),
     # student related endpoints
-    path("students/<int:pk>/", StudentEndpoint.as_view()),
     path("schools/<int:pk>/students/", SchoolStudentEndpoint.as_view()),
+    path(
+        "schools/<int:school_id>/students/<int:student_id>/",
+        SchoolStudentDetailEndpoint.as_view(),
+    ),
     #
 ]
